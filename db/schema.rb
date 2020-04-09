@@ -10,13 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_09_175748) do
+ActiveRecord::Schema.define(version: 2020_04_09_185455) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "telegrams_chats", force: :cascade do |t|
+  create_table "balance_expenses", force: :cascade do |t|
+    t.string "title"
+    t.decimal "amount"
     t.bigint "chat_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "telegrams_chats", force: :cascade do |t|
+    t.bigint "tg_chat_id"
     t.integer "tg_type"
     t.string "title"
     t.string "username"
@@ -28,17 +36,17 @@ ActiveRecord::Schema.define(version: 2020_04_09_175748) do
   end
 
   create_table "telegrams_messages", force: :cascade do |t|
-    t.bigint "message_id"
-    t.bigint "from_id"
+    t.bigint "tg_message_id"
+    t.bigint "tg_from_id"
     t.integer "date"
-    t.bigint "chat_id"
+    t.bigint "tg_chat_id"
     t.json "data"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "telegrams_users", force: :cascade do |t|
-    t.bigint "user_id"
+    t.bigint "tg_user_id"
     t.string "first_name"
     t.string "last_name"
     t.string "username"

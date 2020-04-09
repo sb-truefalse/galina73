@@ -1,7 +1,7 @@
 class CreateTelegramsChats < ActiveRecord::Migration[6.0]
   def change
     create_table :telegrams_chats do |t|
-      t.bigint :chat_id
+      t.bigint :tg_chat_id
       t.integer :tg_type
       t.string :title
       t.string :username

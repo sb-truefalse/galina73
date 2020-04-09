@@ -21,15 +21,61 @@ class Telegram::Bot::Galina73Controller < Telegram::Bot::UpdatesController
 		respond_with :message, text: response
 	end
 
-  def add!(params = nil)
-		response = t('.title')
-		create_message
-		respond_with :message, text: response
+	def add!(*params)
+		if params.blank?
+			response = t('.params.empty')
+			respond_with :message, text: response
+		else
+			create_message
+			params.each_slice(2) do |title, amount|
+				@chat.expenses.create(
+					title: title,
+					amount: amount.to_d
+				)
+			end
+		end
 	end
 
-  def stat!(params = nil)
-		response = t('.title')
-		respond_with :message, text: response #, parse_mode: "HTML"
+	def stat!(*params)
+		if @chat.expenses.none?
+			response = t('.empty')
+			respond_with :message, text: response
+		else
+			expenses = @chat.expenses
+			start_period = Date.current
+			end_period = Date.current
+
+			if params.first == 'period'
+				begin
+					start_period = params.second.to_date
+					end_period = params.third.to_date	
+				rescue
+					response = t('.error.input')
+					return respond_with :message, text: response
+				end
+			end
+
+			expenses = expenses.where(
+				'created_at BETWEEN :start_period AND :end_period',
+				start_period: start_period.beginning_of_day,
+				end_period: end_period.end_of_day
+			)
+
+			date_to_text = "<i>#{start_period} — #{end_period}</i>"
+			expenses_to_text = ""
+			expenses.each do |expense|
+			  expenses_to_text << "• #{expense.title}: #{expense.amount}\n"
+			end
+	
+			total_amount = expenses.sum(:amount).to_s
+			response = t(
+				'.data',
+				date: date_to_text,
+			  total_amount: total_amount,
+				expenses: expenses_to_text
+			)
+			respond_with :message, text: response, parse_mode: "HTML"
+		end
 	end
 
 	# processing non-existent commands
@@ -57,21 +103,21 @@ class Telegram::Bot::Galina73Controller < Telegram::Bot::UpdatesController
 	private
 
 	def find_chat
-		Telegrams::Chat.find_by(chat_id: chat['id'].to_i)
+		@chat ||= Telegrams::Chat.find_by(tg_chat_id: chat['id'].to_i)
 	end
 
 	def find_user
-		Telegrams::User.find_by(user_id: chat['id'].to_i)
+		Telegrams::User.find_by(tg_user_id: chat['id'].to_i)
 	end
 
 	def create_message
 		return unless message
 
 		Telegrams::Message.create(
-			message_id: message['message_id'].to_i,
-      from_id: from? && from['id'].to_i,
+			tg_message_id: message['message_id'].to_i,
+      tg_from_id: from? && from['id'].to_i,
       date: message['date'].to_i,
-      chat_id: message['date'].to_i,
+      tg_chat_id: message['date'].to_i,
       data: { text: message['text'] }
 		)
 	end
@@ -80,7 +126,7 @@ class Telegram::Bot::Galina73Controller < Telegram::Bot::UpdatesController
 		return unless chat
 
 		Telegrams::Chat.create(
-			chat_id: chat['id'].to_i,
+			tg_chat_id: chat['id'].to_i,
       tg_type: "tg_#{chat['type']}",
       title: chat['title'],
       username: chat['username'],
@@ -94,7 +140,7 @@ class Telegram::Bot::Galina73Controller < Telegram::Bot::UpdatesController
 		return unless from
 
 		Telegrams::User.create(
-			user_id: from['id'].to_i,
+			tg_user_id: from['id'].to_i,
       username: from['username'],
       first_name: from['first_name'],
       last_name: from['last_name'],

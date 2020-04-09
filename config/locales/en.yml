@@ -1,20 +1,29 @@
-ru:
+en:
   telegram:
     bot:
       galina73:
         start:
-          title: "Hello. Wait, please! I'm being trained."
+          new:
+            title: "Try the command /add or /stat"
+          chat:
+            title: "Welcome! Start by adding costs: /add"
         help:
           title: "Expenditure control.\n
           You can add a list of expenses.\n
           View statistics for any period.\n
           Keep costs together with others."
         add:
-          title: "Wait, please! I'm being trained."
+          params:
+            empty: "Pass the params / add product amount"
         stat:
-          title: "Wait, please! I'm being trained."
+          empty: "Empty" 
+          data: "Statistics for %{date}:\n
+          %{expenses}\n
+          <b>Total amount:</b> %{total_amount} c.u
+          "
         error:
           action: "Unknown action: %{command}"
           command: "Unknown command: %{command}"
+          input: "Invalid input"
           user:
             not_exist: "Run /start to start tracking costs"
