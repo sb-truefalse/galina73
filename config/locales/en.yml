@@ -2,6 +2,8 @@ ru:
   telegram:
     bot:
       galina73:
+        action_error: "Unknown action: %{command}"
+        command_error: "Unknown command: %{command}"
         start:
           title: "Hello. Wait, please! I'm being trained."
         help:
