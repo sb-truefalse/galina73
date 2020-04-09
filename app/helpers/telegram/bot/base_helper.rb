@@ -1,5 +1,9 @@
 module Telegram::Bot::BaseHelper
-  protected
+	protected
+	
+	def message
+		payload
+	end
 
   def set_locale
 		language = from? && payload['from']['language_code']
