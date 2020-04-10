@@ -1,8 +1,11 @@
-class Telegram::Bot::Galina73::StatService < Telegram::Bot::BaseService
+class Telegram::Bot::Galina73::BalanceService < Telegram::Bot::BaseService
   def call(params)
     chat = @chat
-		expenses = chat.expenses
-    return code(:expenses_empty) if expenses.none?
+    return error if chat.blank?
+
+    start_period, end_period = date_period(params)
+    income = chat.income
+    expenses = chat.expenses
 
     start_period, end_period = date_period(params)
     return code(:error_input) unless start_period || end_period
@@ -13,20 +16,18 @@ class Telegram::Bot::Galina73::StatService < Telegram::Bot::BaseService
       return error
     end
 
-		date_to_text = "<i>#{start_period} — #{end_period}</i>"
-		expenses_to_text = ""
-		expenses.each do |expense|
-			expenses_to_text << "• #{expense.title}: #{expense.amount}\n"
-		end
-    total_amount = expenses.sum(:amount).to_s
-    
-		data = OpenStruct.new(
-			date: date_to_text,
-			total_amount: total_amount,
-			expenses: expenses_to_text
-    )
+		period = "<i>#{start_period} — #{end_period}</i>"
+    income_amount = income.amount
+    expenses_amount = expenses.sum(:amount)
+    balance = income_amount - expenses_amount
 
-    success(data, code: :expenses)
+    data = OpenStruct.new(
+      period: period, 
+      income: income_amount,
+      expenses: expenses_amount,
+      balance: balance
+    )
+    success(data, code: :data)
   end
 
   protected

@@ -3,7 +3,8 @@ class Telegram::Bot::BaseService < Service
 
   attr_reader :chat_params, :from_params, :payload
 
-  def initialize(chat_params, from_params, payload)
+  def initialize(chat, chat_params, from_params, payload)
+    @chat = chat
     @chat_params = chat_params
     @from_params = from_params
     @payload = payload

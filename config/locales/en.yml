@@ -21,6 +21,13 @@ en:
           %{expenses}\n
           <b>Total amount:</b> %{total_amount} c.u
           "
+        income:
+        balance:
+          data: "Balance for %{period}:\n
+          <b>Income:</b> %{income} c.u\n
+          <b>Expenses:</b> %{expenses} c.u\n
+          <b>Balance:</b> %{balance} c.u\n
+          "
         error:
           server: "Bot error"
           action: "Unknown action: %{command}"

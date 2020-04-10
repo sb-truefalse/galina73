@@ -20,6 +20,13 @@ ru:
           data: "Статистика за %{date}:\n%{expenses}\n
           <b>Общая сумма:</b> %{total_amount} y.e
           "
+        income:
+        balance:
+          data: "Баланс за %{period}:\n
+          <b>Доход:</b> %{income} y.e\n
+          <b>Расход:</b> %{expenses} y.e\n
+          <b>Сальдо:</b> %{balance} y.e\n
+          "
         error:
           server: "Ошибка бота"
           action: "Неизвестное действие: %{command}"

@@ -1,4 +1,7 @@
 class Telegrams::Chat < ApplicationRecord
+  has_one :income,
+           class_name: 'Balance::Income'
+
   has_many :expenses,
            class_name: 'Balance::Expense'
 

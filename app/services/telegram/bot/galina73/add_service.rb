@@ -1,6 +1,6 @@
 class Telegram::Bot::Galina73::AddService < Telegram::Bot::BaseService
   def call(params)
-    chat = find_chat
+    chat = @chat
     return error if chat.blank?
   
     return code(:params_empty) if params.blank?
