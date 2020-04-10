@@ -21,6 +21,7 @@ ru:
           <b>Общая сумма:</b> %{total_amount} y.e
           "
         error:
+          server: "Ошибка бота"
           action: "Неизвестное действие: %{command}"
           command: "Неизвестная команда: %{command}"
           input: "Неверный ввод"

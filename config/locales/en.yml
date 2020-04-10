@@ -22,6 +22,7 @@ en:
           <b>Total amount:</b> %{total_amount} c.u
           "
         error:
+          server: "Bot error"
           action: "Unknown action: %{command}"
           command: "Unknown command: %{command}"
           input: "Invalid input"
